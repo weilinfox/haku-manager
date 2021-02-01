@@ -42,8 +42,19 @@ while True:
         try:
             wMsg = list(subprocess.getoutput(statusCom).split())
             if len(wMsg) > 8:
-                reportDict['status']['cpu']['load_average'] = float(wMsg[7][:-1])
-                reportDict['status']['time']['uptime'] = wMsg[2][:-1]
+                uptime = ''
+                getU = False
+                for s in wMsg:
+                    if getU and uptime and s[-1] != ',': break
+                    elif getU: uptime += f' {s}'
+                    if s == 'up': getU = True
+                reportDict['status']['time']['uptime'] = uptime[:-1].strip()
+                getU = False
+                for s in wMsg:
+                    if getU: 
+                        reportDict['status']['cpu']['load_average'] =  float(s[:-1])
+                        break
+                    if s == 'average:': getU = True
             statMsg = list(subprocess.getoutput(ditlCom).split())
             if len(statMsg) == 40:
                 reportDict['status']['process']['r'] = int(statMsg[23])
