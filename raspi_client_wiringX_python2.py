@@ -16,9 +16,11 @@ gpio.setup(gpio.RASPBERRYPI3)
 # GPIO.1 PIN12
 # wiringX code just like wiringPi
 FAN_GPIO = gpio.PIN1
-fan_status = 0
+fan_status = 1
 # set FAN_GPIO output
 gpio.pinMode(FAN_GPIO, gpio.PINMODE_OUTPUT)
+# init
+gpio.digitalWrite(FAN_GPIO, gpio.LOW)
 
 # upload status
 URL = 'http://127.0.0.1:8080'

@@ -13,11 +13,13 @@ cores = int(os.system('cat /proc/cpuinfo| grep "processor"| wc -l'))
 
 # GPIO.1 PIN12
 FAN_GPIO = 1
-fan_status = 0
+fan_status = 1
 # wiringPi 编码
 wiringpi.wiringPiSetup()
 # set FAN_GPIO output
 wiringpi.pinMode(FAN_GPIO, 1)
+# init
+wiringpi.digitalWrite(FAN_GPIO ,0)
 
 # 状态上报
 URL = '127.0.0.1'
