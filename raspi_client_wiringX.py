@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # need root
-# wiringPi 版本
-import wiringpi
+# wiringX 版本
+from wiringX import gpio
 import subprocess, time, os
 import requests
 import traceback
@@ -12,12 +12,13 @@ if os.system('vmstat -V'): exit(1)
 cores = int(os.system('cat /proc/cpuinfo| grep "processor"| wc -l'))
 
 # GPIO.1 PIN12
-FAN_GPIO = 1
+# wiringX 编码同 wiringPi
+FAN_GPIO = gpio.PIN1
 fan_status = 0
-# wiringPi 编码
-wiringpi.wiringPiSetup()
+# raspberrypi3
+gpio.setup(gpio.RASPBERRYPI3)
 # set FAN_GPIO output
-wiringpi.pinMode(FAN_GPIO, 1)
+gpio.pinMode(FAN_GPIO, gpio.PINMODE_OUTPUT)
 
 # 状态上报
 URL = '127.0.0.1'
@@ -35,7 +36,7 @@ ditlCom = 'vmstat'
 #temp_exceed_time = 0
 
 reportDelay = 60
- 
+
 while True:
     try:
         resp = requests.post(url=f'http://{URL}:{PORT}', json={'post_type':'haku-manager','server_name':NAME,'message_type':'heartBeat'})
@@ -62,12 +63,12 @@ while True:
         cpu_temp = int(tempData) / 1000
 
     try:
-        # 0 为启动 1 为关闭
+        # low 为启动 high 为关闭
         if not fan_status and (cpu_temp >= 50.0 or cpu_temp < 0):
-            wiringpi.digitalWrite(FAN_GPIO ,0)
+            gpio.digitalWrite(FAN_GPIO, gpio.LOW)
             fan_status = 1
         if fan_status and cpu_temp >= 0 and cpu_temp < 45.0:
-            wiringpi.digitalWrite(FAN_GPIO ,1)
+            gpio.digitalWrite(FAN_GPIO, gpio.HIGH)
             fan_status = 0
     except:
         msg = traceback.format_exc()
