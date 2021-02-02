@@ -9,7 +9,8 @@ import traceback
 
 if os.system('w -V'): exit(1)
 if os.system('vmstat -V'): exit(1)
-cores = int(os.system('cat /proc/cpuinfo| grep "processor"| wc -l'))
+if os.system('cat /proc/cpuinfo| grep "processor"| wc -l'): exit(1)
+cores = int(subprocess.getoutput('cat /proc/cpuinfo| grep "processor"| wc -l'))
 
 # raspberrypi3
 gpio.setup(gpio.RASPBERRYPI3)
