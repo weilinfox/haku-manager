@@ -1,0 +1,11 @@
+[Unit]
+Description=Auto start haku-manager and sensors
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/hachi/hakuBot/haku-manager-run/raspi_client_wiringX_python2.py
+
+[Install]
+WantedBy=multi-user.target
