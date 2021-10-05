@@ -1,6 +1,6 @@
 #!/bin/python3
 
-import flask, requests
+import flask, requests, logging
 import time, json, threading
 
 flaskApp = flask.Flask(__name__)
@@ -11,8 +11,11 @@ PORT = 8080
 HAKUHOST = '127.0.0.1'
 HAKUPORT = 8000
 
+FLASKLOGGER = logging.getLogger('werkzeug')
+FLASKLOGGER.setLevel(logging.WARNING)
+
 def new_event(msgDict):
-    print(msgDict)
+    #print(msgDict)
     try:
         requests.post(url=f'http://{HAKUHOST}:{HAKUPORT}/', json=msgDict)
     except Exception as e:
